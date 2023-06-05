@@ -38,7 +38,7 @@ func main() {
 				log.Println("Published:", msg)
 			}
 
-			time.Sleep(time.Second)
+			time.Sleep(5 * time.Second)
 		}
 	}
 }
