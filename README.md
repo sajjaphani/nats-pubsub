@@ -6,6 +6,8 @@ This repository is a [Go](https://golang.org/) project for experimentation on [N
 - [publisher](components/pub/): Implementation of a Go client that acts as a publisher
 - [subscriber](components/sub/): Implementation of a Go client that acts as a subscriber
 
+The [structured](components/core/message/message.go) messages are sent and received using the standard JSON encoding.
+
 ## Setup
 
 1. Seart the server

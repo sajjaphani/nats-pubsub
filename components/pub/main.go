@@ -8,7 +8,10 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sajjaphani/nats-pubsub/components/core/message"
 )
+
+const subject string = "hello.nats"
 
 func main() {
 	// Connect to NATS server
@@ -18,11 +21,16 @@ func main() {
 	}
 	defer nc.Close()
 
+	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer ec.Close()
+
 	// Create a channel to listen for termination signals
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, os.Interrupt, syscall.SIGTERM)
 
-	subject := "hello.nats"
 	// Publish messages every second until termination signal is received
 	for {
 		select {
@@ -30,12 +38,12 @@ func main() {
 			log.Println("Termination signal received. Publisher exiting...")
 			return
 		default:
-			msg := "Hello NATS!"
-			err = nc.Publish(subject, []byte(msg))
+			m := message.NewMessage("Hello NATS!")
+			err = ec.Publish(subject, m)
 			if err != nil {
 				log.Println("Publish error:", err)
 			} else {
-				log.Println("Published:", msg)
+				log.Println("Published:", m.String())
 			}
 
 			time.Sleep(5 * time.Second)
