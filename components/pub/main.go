@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"os/signal"
@@ -8,10 +9,9 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
+	"github.com/sajjaphani/nats-pubsub/components/common/stream"
 	"github.com/sajjaphani/nats-pubsub/components/core/message"
 )
-
-const subject string = "hello.nats"
 
 func main() {
 	// Connect to NATS server
@@ -20,6 +20,12 @@ func main() {
 		log.Fatal(err)
 	}
 	defer nc.Close()
+
+	// Create JetStream Context
+	js, err := stream.InitJetStream(nc)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	ec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	if err != nil {
@@ -39,7 +45,13 @@ func main() {
 			return
 		default:
 			m := message.NewMessage("Hello NATS!")
-			err = ec.Publish(subject, m)
+			msg, err := json.Marshal(m)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+
+			_, err = js.Publish(stream.StreamSubjectMessageCreated, msg)
 			if err != nil {
 				log.Println("Publish error:", err)
 			} else {

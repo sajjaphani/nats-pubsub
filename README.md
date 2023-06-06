@@ -6,7 +6,7 @@ This repository is a [Go](https://golang.org/) project for experimentation on [N
 - [publisher](components/pub/): Implementation of a Go client that acts as a publisher
 - [subscriber](components/sub/): Implementation of a Go client that acts as a subscriber
 
-The [structured](components/core/message/message.go) messages are sent and received using the standard JSON encoding.
+The server component will run the NATS server with the JetStream subsystem enabled. The [structured messages]((components/core/message/message.go)) are sent and received using the standard JSON encoding over JetStream.
 
 ## Setup
 
@@ -16,7 +16,6 @@ The [structured](components/core/message/message.go) messages are sent and recei
 
 Please refer to the following sections for instructions on how to start each of these individual components.
 
-**Note:** If the publisher is started before the subscriber, the messages will be dropped until a subscriber is available to consume them.
 
 ## Server
 

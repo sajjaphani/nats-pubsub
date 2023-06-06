@@ -8,12 +8,16 @@ import (
 
 func defaultOptions() *server.Options {
 	return &server.Options{
-		Host:   "127.0.0.1",
-		Port:   4222,
-		NoLog:  false,
-		NoSigs: false,
-		Debug:  true,
-		Trace:  true,
+		Host:               "127.0.0.1",
+		Port:               4222,
+		NoLog:              false,
+		NoSigs:             false,
+		Debug:              true,
+		Trace:              true,
+		JetStream:          true,
+		JetStreamMaxMemory: 1 * 1024 * 1024 * 1024,  // 1GB
+		JetStreamMaxStore:  10 * 1024 * 1024 * 1024, // 10GB
+		StoreDir:           "/tmp/nats/data/nats-server",
 	}
 }
 
